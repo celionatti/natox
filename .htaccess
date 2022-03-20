@@ -1,0 +1,28 @@
+RewriteEngine On
+
+Options +Multiviews
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ public/index.php/$1 [QSA,L]
+
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+RewriteCond %{THE_REQUEST} \s/+(.*?)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,NE,L]
+
+
+## Redirect to a URL on the same domain or host
+Redirect 301 "/home" "/"
+
+##protect a file
+
+<Files composer.json>
+AuthName "Access to Composer File"
+AuthType Basic
+AuthUserFile C:\xampp\htdocs\natox\core\.htpasswd
+Require valid-user
+
+</Files>
