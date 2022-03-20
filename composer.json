@@ -14,5 +14,7 @@
         "email": "amisuusman@gmail.com"
     }],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.4"
+    }
 }
