@@ -31,6 +31,18 @@ class Request
     public $method;
 
     /**
+     * @var string fulluri defines the full uri of the request includng the query parameters
+     * @property string fulluri defines the full uri of the request includng the query parameters
+     */
+    public $fullUri;
+
+    /**
+     * @var array uriComponents defines a list of all the elements of the uri
+     * @property array uriComponents defines a list of all the elements of the uri
+     */
+    public $uriComponents;
+
+    /**
      * @var string host reads the host information as taken from the headers of the request
      * @property string host reads the host information as taken from the headers of the request
      */
@@ -78,6 +90,14 @@ class Request
      */
     public $cookie;
 
+    /**
+     * @var array fetches all the request parameters
+     * @property array fetches all the request parameters
+     */
+    public $parameters;
+
+    private array $routeParams = [];
+
     public function __construct()
     {
         $this->_request = getallheaders();
@@ -91,6 +111,8 @@ class Request
         $this->acceptEncoding = $this->_request['accept-encoding'] ?? ($this->_request['Accept-Encoding'] ?? '');
         $this->acceptLanguage = $this->_request['accept-language'] ?? ($this->_request['Accept-Language'] ?? '');
         $this->cookie = $this->_request['cookie'] ?? ($this->_request['Cookie'] ?? '');
+
+        $this->fullUri = $this->getUrl();
         $this->uriParameters = $this->getURIParameters();
 
         return $this;
@@ -127,6 +149,28 @@ class Request
             }
         }
         return $result;
+    }
+
+    /**
+     * Fetches the full uri a request
+     */
+    public function getUrl()
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        $position = strpos($path, '?');
+        if ($position !== false) {
+            $path = substr($path, 0, $position);
+        }
+        return $path;
+    }
+
+    /**
+     * Fetches the parameters of a request
+     */
+    public function parameters()
+    {
+        $parameters = $this->getURIParameters();
+        return $parameters;
     }
 
     /**
@@ -185,5 +229,30 @@ class Request
             }
         }
         return;
+    }
+
+    public static function sanitize($dirty)
+    {
+        return htmlentities(trim($dirty), ENT_QUOTES, "UTF-8");
+    }
+
+    /**
+     * @param $params
+     * @return self
+     */
+    public function setRouteParams($params)
+    {
+        $this->routeParams = $params;
+        return $this;
+    }
+
+    public function getRouteParams()
+    {
+        return $this->routeParams;
+    }
+
+    public function getRouteParam($param, $default = null)
+    {
+        return $this->routeParams[$param] ?? $default;
     }
 }
