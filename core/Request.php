@@ -7,13 +7,12 @@ declare(strict_types=1);
 namespace NatoxCore;
 
 /**
- * Class Application
+ * Class Request
  * 
  * @author Celio Natti <amisuusman@gmail.com>
  * @package NatoxCore
  */
 
- class Application
- {
-     
- }
+class Request
+{
+}
