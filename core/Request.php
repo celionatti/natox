@@ -25,35 +25,10 @@ class Request
     private $_request;
 
     /**
-     * @var array uriParameters defines the uri request parameters 
-     * @property array uriParameters defines the uri request parameters 
-     */
-    public $uriParameters;
-
-
-    /**
      * @var array method fetches the http request method
      * @property array method fetches the http request method
      */
     public $method;
-
-    /**
-     * @var string uri defines the uri of the request without query parameters
-     * @property string uri defines the uri of the request without query parameters
-     */
-    public $uri;
-
-    /**
-     * @var string fulluri defines the full uri of the request includng the query parameters
-     * @property string fulluri defines the full uri of the request includng the query parameters
-     */
-    public $fullUri;
-
-    /**
-     * @var array uriComponents defines a list of all the elements of the uri
-     * @property array uriComponents defines a list of all the elements of the uri
-     */
-    public $uriComponents;
 
     /**
      * @var string host reads the host information as taken from the headers of the request
@@ -103,36 +78,6 @@ class Request
      */
     public $cookie;
 
-    /**
-     * @var array parsedURI has all the headers information of the request
-     * @property array parsedURI has all the headers information of the request
-     */
-    public $parsedURI;
-
-    /**
-     * @var array currentRoute has all the headers information of the request
-     * @property array currentRoute has all the headers information of the request
-     */
-    public $currentRoute;
-
-    /**
-     * @var array currentBind has all the headers information of the request
-     * @property array currentBind has all the headers information of the request
-     */
-    public $currentBind;
-
-    /**
-     * @var array fetch has all the headers information of the request
-     * @property array fetch has all the headers information of the request
-     */
-    public $fetch;
-
-    /**
-     * @var array fetches all the request parameters
-     * @property array fetches all the request parameters
-     */
-    public $parameters;
-
     public function __construct()
     {
         $this->_request = getallheaders();
@@ -146,12 +91,8 @@ class Request
         $this->acceptEncoding = $this->_request['accept-encoding'] ?? ($this->_request['Accept-Encoding'] ?? '');
         $this->acceptLanguage = $this->_request['accept-language'] ?? ($this->_request['Accept-Language'] ?? '');
         $this->cookie = $this->_request['cookie'] ?? ($this->_request['Cookie'] ?? '');
-
         $this->uriParameters = $this->getURIParameters();
-        $this->fullUri = $this->fullUri();
-        $this->uriComponents = $this->uri != '/' ? explode('/', $this->uri) : array();
-        $this->parameters = empty($this->uriParameters) ? $this->currentBind : $this->uriParameters;
-        $this->fetch = (object)($this->currentBind);
+
         return $this;
     }
 
@@ -186,25 +127,6 @@ class Request
             }
         }
         return $result;
-    }
-
-
-    /**
-     * Fetches the full uri a request
-     */
-    public function fullUri()
-    {
-        $parametersQuery = http_build_query($this->uriParameters) ?? '';
-        return urldecode($this->uri . "?" . $parametersQuery);
-    }
-
-    /**
-     * Fetches the parameters of a request
-     */
-    public function parameters()
-    {
-        $parameters = $this->getURIParameters();
-        return $parameters;
     }
 
     /**
