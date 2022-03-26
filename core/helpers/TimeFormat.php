@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**User: Celio Natti *** */
 
-namespace natoxCore\helpers;
+namespace NatoxCore\helpers;
 
 /**
  * Class TimeFormat

@@ -23,7 +23,6 @@ use natoxCore\Session;
 </head>
 
 <body>
-    <?= $this->partial('mainMenu') ?>
     <div class="container">
         <?= Session::displaySessionAlerts(); ?>
         <?php $this->content('content') ?>

@@ -6,7 +6,8 @@ declare(strict_types=1);
 
 namespace NatoxCore;
 
-use natoxCore\helpers\GenerateToken;
+use Exception;
+use NatoxCore\helpers\GenerateToken;
 
 /**
  * Class Session
@@ -48,7 +49,7 @@ class Session
     public static function createCsrfToken()
     {
         $token = GenerateToken::CreateToken();
-        self::set('token', $token);
+        self::set('_token', $token);
         return $token;
     }
 
@@ -56,10 +57,12 @@ class Session
     {
         $request = new Request();
         $check = $request->get('_token');
-        if (self::exists('token') && self::get('token') == $check) {
+        if (self::exists('_token') && self::get('_token') == $check) {
             return true;
         }
-        Response::redirect('badToken');
+        throw new Exception(Errors::get('3000'), 3000);
+        exit;
+        // Response::redirect('badToken');
     }
 
     // $type can be primary, secondary, success, danger, warning, info, light, dark

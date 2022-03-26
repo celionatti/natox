@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace NatoxCore;
 
+use Exception;
+
 /**
  * Class View
  * 
@@ -47,10 +49,10 @@ class View
         $layoutPath = Application::$ROOT_DIR . "/src/views/layouts/$this->_layout.php";
         $fullPath = Application::$ROOT_DIR . "/src/views/$path.php";
         if (!file_exists($fullPath)) {
-            throw new \Exception("The view \"{$path}\" does not exist.");
+            throw new Exception(Errors::get('5001'), 5001);
         }
         if (!file_exists($layoutPath)) {
-            throw new \Exception("The layout \"{$this->_layout}\" does not exist.");
+            throw new Exception(Errors::get('5002'), 5002);
         }
         include($fullPath);
         include($layoutPath);
@@ -59,7 +61,7 @@ class View
     public function start($key)
     {
         if (empty($key)) {
-            throw new \Exception("Your start method requires a valid key.");
+            throw new Exception(Errors::get('5003'), 5003);
         }
         $this->_buffer = $key;
         ob_start();
@@ -68,7 +70,7 @@ class View
     public function end()
     {
         if (empty($this->_buffer)) {
-            throw new \Exception("You must first run the start method.");
+            throw new Exception(Errors::get('5004'), 5004);
         }
         $this->_content[$this->_buffer] = ob_get_clean();
         $this->_buffer = null;

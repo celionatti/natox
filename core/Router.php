@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace NatoxCore;
 
 use Exception;
+use NatoxCore\helpers\H;
 
 /**
  * Class Router
@@ -35,6 +36,16 @@ class Router
     public function post(string $url, $callback)
     {
         $this->routeMap['post'][$url] = $callback;
+    }
+
+    public function put(string $url, $callback)
+    {
+        $this->routeMap['put'][$url] = $callback;
+    }
+
+    public function delete(string $url, $callback)
+    {
+        $this->routeMap['delete'][$url] = $callback;
     }
 
     /**

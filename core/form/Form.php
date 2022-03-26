@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace natoxCore\form;
+namespace NatoxCore\form;
+
+use NatoxCore\Session;
 
 /**
  * Class Form
@@ -11,8 +13,7 @@ namespace natoxCore\form;
  * @package NatoxCore/form
  */
 
-use natoxCore\Session;
-
+ 
 class Form
 {
     public static function inputBlock($label, $id, $value, $inputAttrs = [], $wrapperAttrs = [], $errors = [])

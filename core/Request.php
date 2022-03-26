@@ -8,6 +8,7 @@ namespace NatoxCore;
 
 use \Exception as Exception;
 use NatoxCore\helpers\CoreHelpers;
+use NatoxCore\helpers\H;
 
 /**
  * Class Request
@@ -20,54 +21,11 @@ class Request
 {
     private array $routeParams = [];
 
-    public function __construct()
-    {
-        $this->_request = getallheaders();
-        $this->method = isset($_REQUEST['_method']) && $_REQUEST['_method'] != '' ? strtoupper($_REQUEST['_method']) : $_SERVER['REQUEST_METHOD'];
-
-        $this->host = $this->_request['host'] ?? ($this->_request['Host'] ?? '');
-        $this->authorization = $this->_request['authorization'] ?? ($this->_request['Authorization'] ?? '');
-        $this->cache = $this->_request['cache'] ?? ($this->_request['Cache'] ?? '');
-        $this->userAgent = $this->_request['User-Agent'] ?? '';
-        $this->accept = $this->_request['accept'] ?? ($this->_request['Accept'] ?? '');
-        $this->acceptEncoding = $this->_request['accept-encoding'] ?? ($this->_request['Accept-Encoding'] ?? '');
-        $this->acceptLanguage = $this->_request['accept-language'] ?? ($this->_request['Accept-Language'] ?? '');
-        $this->cookie = $this->_request['cookie'] ?? ($this->_request['Cookie'] ?? '');
-
-        return $this;
-    }
-
     public function getMethod()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
-    /**
-     * Fetches all the parameters of a request depending on the method
-     */
-    private function getURIParameters()
-    {
-        $parameters = array();
-        switch ($this->method) {
-            case 'GET':
-                $parameters = $_GET ?? array();
-                break;
-            case 'POST':
-                $parameters = !empty($_POST) ? $_POST : json_decode(file_get_contents("php://input"), true) ?? array();
-                $this->checkCSRF();
-                break;
-            case 'PUT':
-                $parameters = !empty($_POST) ? $_POST : json_decode(file_get_contents("php://input"), true) ?? array();
-                $this->checkCSRF();
-                break;
-            case 'DELETE':
-                $parameters = !empty($_POST) ? $_POST : json_decode(file_get_contents("php://input"), true) ?? array();
-                $this->checkCSRF();
-                break;
-                break;
-        }
-        return $parameters;
-    }
 
     /**
      * Checks if request needs a Json as a way to recognize API calls

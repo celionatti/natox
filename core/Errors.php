@@ -50,7 +50,11 @@ class Errors
 
 
         //5xxx: Natox Errors
-        5000 => '[ERROR 5000] Key Generator Error - Generator could not generate keys'
+        5000 => '[ERROR 5000] Key Generator Error - Generator could not generate keys',
+        5001 => '[ERROR 5001] Views Error - The View Page does not Exists',
+        5002 => '[ERROR 5002] Layouts Error - The Layout does not Exists',
+        5003 => '[ERROR 5003] Key Validity Error - Your start method requires a valid key.',
+        5004 => '[ERROR 5004] Start Method Error - You must first run the start method.',
     ];
 
     /** 

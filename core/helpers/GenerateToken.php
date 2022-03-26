@@ -1,8 +1,8 @@
 <?php
 
-namespace natoxCore\helpers;
+namespace NatoxCore\helpers;
 
-use natoxCore\Config;
+use NatoxCore\Config;
 
 /**
  * Class GenerateToken

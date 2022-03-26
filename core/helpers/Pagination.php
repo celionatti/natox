@@ -2,7 +2,7 @@
 
 /**User: Celio Natti... */
 
-namespace natoxCore\helpers;
+namespace NatoxCore\helpers;
 
 /**
  * Class Pagination

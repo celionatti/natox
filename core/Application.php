@@ -57,7 +57,6 @@ use NatoxCore\database\Database;
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            // H::dnd($e->getMessage(), false);
             echo $this->router->renderError('_error', $e);
         }
     }

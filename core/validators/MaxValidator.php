@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**User: Celio Natti... */
 
-namespace natoxCore\validators;
+namespace NatoxCore\validators;
 
 /**
  * Class MaxValidator
