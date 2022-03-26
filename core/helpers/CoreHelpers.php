@@ -17,12 +17,12 @@ use NatoxCore\Config;
 
 class CoreHelpers
 {
-    public function generateKey($size = 32)
+    public static function generateKey($size = 32)
     {
         return base64_encode(openssl_random_pseudo_bytes($size));
     }
 
-    public function generateToken($size = 12)
+    public static function generateToken($size = 12)
     {
         return bin2hex(random_bytes($size));
     }
@@ -67,7 +67,7 @@ class CoreHelpers
      * @author Dory A.Azar 
      * @version 1.0
      */
-    function session($key, $value = null)
+    public static function session($key, $value = null)
     {
         if ($value) {
             $_SESSION[$key] = $value;
@@ -83,7 +83,7 @@ class CoreHelpers
      * @version 1.0
      */
 
-    public function uploadFile($picture)
+    public static function uploadFile($picture)
     {
         $resultUrl = '';
 
@@ -99,7 +99,7 @@ class CoreHelpers
         if (isset($extension)) {
 
             //generate a new filename 
-            $newfilename = generateToken(12) . "." . $extension;
+            $newfilename = self::generateToken(12) . "." . $extension;
 
             // specify the new document location
             $permanentLocation = UPLOAD_PATH . $newfilename;
@@ -120,7 +120,7 @@ class CoreHelpers
      * @version 1.0
      */
 
-    function deleteFile($url)
+    public static function deleteFile($url)
     {
         $path = parse_url($url, PHP_URL_PATH);
         $filename = basename($path);
@@ -140,22 +140,17 @@ class CoreHelpers
      * @version 1.0
      */
 
-    function isJson($string)
+    public static function isJson($string)
     {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
-    }
-
-    function csrf()
-    {
-        echo "<input type='hidden' name='_token' value='" . session('token') . "'>";
     }
 
     /**
      * cUrl request function
      */
 
-    function httpRequest($url, $method, $data, $headers, $username = null, $password = null)
+    public static function httpRequest($url, $method, $data, $headers, $username = null, $password = null)
     {
 
         $curl = curl_init();
@@ -197,7 +192,7 @@ class CoreHelpers
      * now() returns the current timestamp in a mySQL format
      */
 
-    function now()
+    public static function now()
     {
         return date("Y-m-d H:i:s");
     }

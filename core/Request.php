@@ -18,84 +18,6 @@ use NatoxCore\helpers\CoreHelpers;
 
 class Request
 {
-    /**
-     * @var array _request has all the headers information of the request
-     * @property array _request has all the headers information of the request
-     */
-    private $_request;
-
-    /**
-     * @var array method fetches the http request method
-     * @property array method fetches the http request method
-     */
-    public $method;
-
-    /**
-     * @var string fulluri defines the full uri of the request includng the query parameters
-     * @property string fulluri defines the full uri of the request includng the query parameters
-     */
-    public $fullUri;
-
-    /**
-     * @var array uriComponents defines a list of all the elements of the uri
-     * @property array uriComponents defines a list of all the elements of the uri
-     */
-    public $uriComponents;
-
-    /**
-     * @var string host reads the host information as taken from the headers of the request
-     * @property string host reads the host information as taken from the headers of the request
-     */
-    public $host;
-
-    /**
-     * @var string host reads the host information as taken from the headers of the request
-     * @property string host reads the host information as taken from the headers of the request
-     */
-    public $authorization;
-
-    /**
-     * @var array cache has all the headers information of the request
-     * @property array cache has all the headers information of the request
-     */
-    public $cache;
-
-    /**
-     * @var array userAgent has all the headers information of the request
-     * @property array userAgent has all the headers information of the request
-     */
-    public $userAgent;
-
-    /**
-     * @var array accept has all the headers information of the request
-     * @property array accept has all the headers information of the request
-     */
-    public $accept;
-
-    /**
-     * @var array acceptEncoding has all the headers information of the request
-     * @property array acceptEncoding has all the headers information of the request
-     */
-    public $acceptEncoding;
-
-    /**
-     * @var array acceptLanguage has all the headers information of the request
-     * @property array acceptLanguage has all the headers information of the request
-     */
-    public $acceptLanguage;
-
-    /**
-     * @var array cookie has all the headers information of the request
-     * @property array cookie has all the headers information of the request
-     */
-    public $cookie;
-
-    /**
-     * @var array fetches all the request parameters
-     * @property array fetches all the request parameters
-     */
-    public $parameters;
-
     private array $routeParams = [];
 
     public function __construct()
@@ -112,73 +34,12 @@ class Request
         $this->acceptLanguage = $this->_request['accept-language'] ?? ($this->_request['Accept-Language'] ?? '');
         $this->cookie = $this->_request['cookie'] ?? ($this->_request['Cookie'] ?? '');
 
-        $this->fullUri = $this->getUrl();
-        $this->uriParameters = $this->getURIParameters();
-
         return $this;
     }
 
-    /**
-     * Checks if API requests are authorized
-     */
-    public function authorizeApiRequest()
+    public function getMethod()
     {
-        $result = false;
-        $apiKey = isset($this->authorization) ? $this->authorization : null;
-        $matches = array();
-        if ($apiKey) {
-            preg_match('/Bearer\s(\S+)/', $apiKey, $matches);
-            if (!empty($matches) && isset($matches[1])) {
-                $result = CoreHelpers::encryptDecrypt('decrypt', $matches[1]) == getenv('APP_KEY') ?? false;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Checks if request needs a Json as a way to recognize API calls
-     */
-    public function wantsJson()
-    {
-        $result = false;
-        $acceptance = explode(',', strtolower(preg_replace('/\s+/', '', $this->accept)));
-        if (!empty($acceptance)) {
-            //$result = !in_array('text/html', $acceptance); // set to true if client is not asking for html
-            if (!in_array('text/html', $acceptance)) {
-                $result = in_array('application/json', $acceptance);
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Fetches the full uri a request
-     */
-    public function getUrl()
-    {
-        $path = $_SERVER['REQUEST_URI'];
-        $position = strpos($path, '?');
-        if ($position !== false) {
-            $path = substr($path, 0, $position);
-        }
-        return $path;
-    }
-
-    /**
-     * Fetches the parameters of a request
-     */
-    public function parameters()
-    {
-        $parameters = $this->getURIParameters();
-        return $parameters;
-    }
-
-    /**
-     * Fetches the files uploaded with a request
-     */
-    public function files($fileAttribute)
-    {
-        return $this->getFiles($fileAttribute);
+        return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
     /**
@@ -209,11 +70,19 @@ class Request
     }
 
     /**
-     * Fetches all the files in a request
+     * Checks if request needs a Json as a way to recognize API calls
      */
-    private function getFiles($fileAttribute)
+    public function wantsJson()
     {
-        return $_FILES[$fileAttribute] ?? array();
+        $result = false;
+        $acceptance = explode(',', strtolower(preg_replace('/\s+/', '', $this->accept)));
+        if (!empty($acceptance)) {
+            //$result = !in_array('text/html', $acceptance); // set to true if client is not asking for html
+            if (!in_array('text/html', $acceptance)) {
+                $result = in_array('application/json', $acceptance);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -229,6 +98,53 @@ class Request
             }
         }
         return;
+    }
+
+    public function getUrl()
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        $position = strpos($path, '?');
+        if ($position !== false) {
+            $path = substr($path, 0, $position);
+        }
+        return $path;
+    }
+
+    public function isGet()
+    {
+        return $this->getMethod() === 'get';
+    }
+
+    public function isPost()
+    {
+        return $this->getMethod() === 'post';
+    }
+
+    public function isDelete()
+    {
+        return $this->getMethod() === 'delete';
+    }
+
+    public function isPatch()
+    {
+        return $this->getMethod() === 'patch';
+    }
+
+    public function isPut()
+    {
+        return $this->getMethod() === 'put';
+    }
+
+    public function get($input = false)
+    {
+        if (!$input) {
+            $data = [];
+            foreach ($_REQUEST as $field => $value) {
+                $data[$field] = self::sanitize($value);
+            }
+            return $data;
+        }
+        return array_key_exists($input, $_REQUEST) ? self::sanitize($_REQUEST[$input]) : false;
     }
 
     public static function sanitize($dirty)

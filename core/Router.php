@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace NatoxCore;
 
+use Exception;
+
 /**
  * Class Router
  * 
@@ -99,11 +101,12 @@ class Router
             $callback = $this->getCallback();
 
             if ($callback === false) {
-                throw new NotFoundException();
+                throw new Exception(Errors::get('1001'), 1001);
             }
         }
         if (is_string($callback)) {
-            return $this->renderView($callback);
+            return call_user_func($callback);
+            // return $this->renderView($callback);
         }
         if (is_array($callback)) {
             /**
@@ -118,9 +121,10 @@ class Router
         return call_user_func($callback, $this->request, $this->response);
     }
 
-    public function renderView($view)
+    public function renderError($view, $e = null)
     {
-        Application::$app->view->setLayout('auth');
+        Application::$app->view->setLayout('main');
+        Application::$app->view->error = $e;
         return Application::$app->view->render($view);
     }
 }
