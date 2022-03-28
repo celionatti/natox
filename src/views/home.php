@@ -12,4 +12,6 @@
 <h1>Testing Ajax for Framework</h1>
 
 <button id="btn" class="btn btn-primary w-100 mt-3">Get Text File</button>
+
+<div id="view"></div>
 <?php $this->end(); ?>

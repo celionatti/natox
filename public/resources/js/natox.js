@@ -1,32 +1,57 @@
 document.getElementById('btn').addEventListener('click', loadText)
+const view = document.getElementById('view')
 
-function loadText() {
-    //create xhr object
-    const xhr = new XMLHttpRequest()
-        //open- type, url/file name, async
-    xhr.open('GET', 'contact', true)
-    console.log('READYSTATE', xhr.readyState)
+function postRequest(url, data, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    var loader = document.createElement("div");
+    loader.className = "loader";
+    document.body.appendChild(loader);
+    xhr.addEventListener("readystatechange", function() {
+        if (xhr.readyState === 4) {
+            if (callback) {
+                callback(xhr.response);
+            }
+            loader.remove();
+        }
+    });
 
-    //optional for loaders
-    xhr.onprogress = function() {
-        console.log("Processing...", xhr.readyState);
+    var formdata = data ?
+        data instanceof FormData ?
+        data :
+        new FormData(document.querySelector(data)) :
+        new FormData();
+
+    var csrfMetaTag = document.querySelector('meta[name="csrf_token"]');
+    if (csrfMetaTag) {
+        formdata.append("csrf_token", csrfMetaTag.getAttribute("content"));
     }
+
+    xhr.send(formdata);
+}
+
+
+function getRequest(url) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+
+    xhr.onprogress = function() {
+        alert("Processing....");
+    };
 
     xhr.onload = function() {
-        console.log("READYSTATE", xhr.readyState);
         if (this.status == 200) {
-            // console.log(this.responseText)
+            JSON.parse(this.responseText)
         }
-    }
+    };
     xhr.onerror = function() {
-            console.log('Request Error....')
-        }
-        // xhr.onreadystatechange = function() {
-        //         console.log("READYSTATE", xhr.readyState);
-        //         if (this.readyState == 4 && this.status == 200) {
-        //             // console.log(this.responseText)
-        //         }
-        //     }
-        //send request
-    xhr.send()
+        console.log("Request Error....");
+    };
+
+    xhr.send();
+}
+
+function loadText() {
+    getRequest('about')
 }
