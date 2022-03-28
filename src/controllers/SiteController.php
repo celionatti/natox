@@ -6,10 +6,13 @@ declare(strict_types=1);
 
 namespace Natox\controllers;
 
-use NatoxCore\Controller;
-use NatoxCore\helpers\H;
 use NatoxCore\Request;
 use NatoxCore\Session;
+use Natox\models\Users;
+use NatoxCore\helpers\H;
+use NatoxCore\Controller;
+use Natox\models\Articles;
+use NatoxCore\Application;
 
 /**
  * Class SiteController
@@ -48,9 +51,22 @@ class SiteController extends Controller
 
     public function about(Request $request)
     {
-        if ($request->isDelete()) {
-            H::dnd($request);
-        }
+        // $params = [
+        //     'columns' => "articles.*, users.fname, users.lname, categories.name as category, categories.id as category_id",
+        //     'conditions' => "articles.status = :status",
+        //     'bind' => ['status' => 'public'],
+        //     'joins' => [
+        //         ['users', 'articles.user_id = users.id'],
+        //         ['categories', 'articles.category_id = categories.id', 'categories', 'LEFT']
+        //     ],
+        //     'order' => 'articles.id DESC'
+        // ];
+        $params = ['order' => 'id'];
+
+        $users = Users::find($params);
+
+        $this->view->users = $users;
+        $this->view->articles = Articles::find($params);
         $this->view->render('about');
     }
 }

@@ -6,8 +6,11 @@ declare(strict_types=1);
 
 namespace NatoxCore\database;
 
+use Exception;
 use NatoxCore\Config;
+use NatoxCore\Errors;
 use NatoxCore\Application;
+use NatoxCore\helpers\H;
 
 /**
  * Class Database
@@ -21,8 +24,6 @@ class Database
     protected $_dbh, $_results, $_lastInsertId, $_rowCount = 0, $_fetchType = \PDO::FETCH_OBJ, $_class, $_error = false;
     protected $_stmt;
     protected static $_db;
-    // private static $db_activate = Config::get('DB_ACTIVATE');
-    private static $renderJson = false;
 
     public function __construct()
     {
@@ -66,7 +67,7 @@ class Database
         } else {
             $this->_lastInsertId = $this->_dbh->lastInsertId();
         }
-        return self::render($this);
+        return $this;
     }
 
     public function query($sql, $bind = [])
@@ -222,54 +223,4 @@ class Database
         echo "[" . date("Y-m-d H:i:s") . "] - " . $message . PHP_EOL;
     }
 
-    /**
-     * Result rendered
-     * @param object|array $result defines the result coming from the database in an array format
-     * @return rendered result in array or json format depending on the setting
-     * @author Dory A.Azar 
-     * @version 1.0
-     */
-    public static function render($result)
-    {
-        // create the JSON array
-        $jsonarray = array();
-        while ($row = $result->fetch()) {
-            $jsonarray[] = $row;
-        }
-        if (self::$renderJson) {
-            return json_encode($jsonarray);
-        } else {
-            return json_decode(json_encode($jsonarray), true);
-        }
-    }
-
-    /**
-     * Forces the result to an array
-     * @param array $result defines the result coming in either a json or array format
-     * @return array $result the result rendered as an array
-     * @author Dory A.Azar 
-     * @version 1.0
-     */
-    public static function toArray($result)
-    {
-        $render = $result;
-        if (!is_array($result) && self::is_Json($result)) {
-            $render = json_decode($result, true);
-        }
-        return $render;
-    }
-
-
-    /**
-     * Checks if a string i a JSON
-     * @param string $string defines the string to be checked
-     * @return boolean if the string is a JSON
-     * @author Dory A.Azar 
-     * @version 1.0
-     */
-    public static function is_Json($string)
-    {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
-    }
 }

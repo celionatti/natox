@@ -64,7 +64,7 @@ class CoreHelpers
 
     /**
      * Gets/Sets a session variable by key
-     * @author Dory A.Azar 
+     * @author Celio Natti 
      * @version 1.0
      */
     public static function session($key, $value = null)
@@ -79,7 +79,7 @@ class CoreHelpers
      * Uploads a file from a form into the server
      * @param array $picture defines the picture attributes array
      * @return string the resulting public URL of the uploaded file
-     * @author Dory A.Azar 
+     * @author Celio Natti 
      * @version 1.0
      */
 
@@ -102,7 +102,7 @@ class CoreHelpers
             $newfilename = self::generateToken(12) . "." . $extension;
 
             // specify the new document location
-            $permanentLocation = UPLOAD_PATH . $newfilename;
+            $permanentLocation = Config::get('UPLOAD_PATH') . $newfilename;
 
             // proceed with the move and if successful return the public url to it
             if (move_uploaded_file($picture['tmp_name'], $permanentLocation)) {
@@ -116,7 +116,7 @@ class CoreHelpers
      * Deletes a file given its public path
      * @param string $url of the image public url
      * @return boolean of the result
-     * @author Dory A.Azar 
+     * @author Celio Natti 
      * @version 1.0
      */
 
@@ -127,7 +127,7 @@ class CoreHelpers
         if (!$filename) {
             return false;
         }
-        unlink(UPLOAD_PATH . $filename);
+        unlink(Config::get('UPLOAD_PATH') . $filename);
         return true;
     }
 
@@ -136,7 +136,7 @@ class CoreHelpers
      * Checks if a string is a json
      * @param string $string defines the string to be checked
      * @return boolean true if it is a json
-     * @author Dory A.Azar 
+     * @author Celio Natti 
      * @version 1.0
      */
 

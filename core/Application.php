@@ -26,7 +26,6 @@ use NatoxCore\database\Database;
 
     public static Application $app;
     public static string $ROOT_DIR;
-    public string $userClass;
     public string $layout = 'main';
     public Router $router;
     public Request $request;
@@ -48,6 +47,10 @@ use NatoxCore\database\Database;
         $this->view = new View();
 
         define('TIMEZONE', Config::get('TIME_ZONE'));
+        define('COINBASE_API_KEY', Config::get('COINBASE_API_KEY'));
+        define('COINBASE_API_SECRET', Config::get('COINBASE_API_SECRET'));
+        define('COINBASE_VERSION', Config::get('COINBASE_VERSION'));
+        define('CRYPTO_PAY_KEY', Config::get('CRYPTO_PAY_KEY'));
         define('ROOT', '/');
     }
 

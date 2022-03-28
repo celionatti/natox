@@ -12,7 +12,6 @@ use natoxCore\Session;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon -->
-    <!-- <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.png"> -->
     <link rel="icon" type="image/png" sizes="32x32" href="<?= ROOT ?>public/resources/img/favicon.png">
 
     <link rel="stylesheet" href="<?= ROOT ?>public/resources/fonts/remixicon.css">

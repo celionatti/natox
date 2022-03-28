@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace NatoxCore;
 
+use Natox\models\Users;
+
 /**
  * Class Response
  * 
@@ -37,8 +39,7 @@ class Response
 
     public static function permRedirect($perm, $redirect, $msg = "You do not have access to this page.")
     {
-        // $user = Users::getCurrentUser();
-        $user = object;
+        $user = Users::getCurrentUser();
         $allowed = $user && $user->hasPermission($perm);
         if (!$allowed) {
             Session::msg($msg);
