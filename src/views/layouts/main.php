@@ -28,6 +28,7 @@ use natoxCore\Session;
         <?php $this->content('content') ?>
     </div>
 
+    <script src="<?= ROOT ?>public/resources/js/jquery.min.js"></script>
     <script src="<?= ROOT ?>public/resources/js/bootstrap.bundle.min.js" type="application/javascript"></script>
     <script src="<?= ROOT ?>public/resources/js/natox.js?v=<?= Config::get("version") ?>"></script>
     <?php $this->content('footer') ?>
