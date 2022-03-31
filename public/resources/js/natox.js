@@ -4,8 +4,7 @@ const view = document.getElementById('view')
 function postRequest(url, data, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
-    var loader = document.createElement("div");
-    loader.className = "loader";
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     document.body.appendChild(loader);
     xhr.addEventListener("readystatechange", function() {
         if (xhr.readyState === 4) {
